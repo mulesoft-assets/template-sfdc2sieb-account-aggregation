@@ -20,7 +20,7 @@ public class AbstractTemplateTestCase extends FunctionalTestCase {
 	private static final String TEST_FLOWS_FOLDER_PATH = "./src/test/resources/flows/";
 	private static final String MULE_DEPLOY_PROPERTIES_PATH = "./src/main/app/mule-deploy.properties";
 
-	protected static final String TEMPLATE_NAME = "opportunity-aggregation";
+	protected static final String TEMPLATE_NAME = "account-aggregation";
 
 	@Rule
 	public DynamicPort port = new DynamicPort("http.port");
@@ -37,7 +37,7 @@ public class AbstractTemplateTestCase extends FunctionalTestCase {
 					"Could not find mule-deploy.properties file on classpath. Please add any of those files or override the getConfigResources() method to provide the resources by your own.");
 		}
 
-		return resources + getTestFlows();
+		return resources;
 	}
 
 	protected String getTestFlows() {

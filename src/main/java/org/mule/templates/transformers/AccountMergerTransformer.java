@@ -35,36 +35,36 @@ public final class AccountMergerTransformer extends AbstractMessageTransformer {
 	/**
 	 * The method will merge the accounts from the two lists creating a new one.
 	 * 
-	 * @param accountsFromOrgA
-	 *            accounts from organization A
-	 * @param accountsFromOrgB
-	 *            accounts from organization B
+	 * @param accountsFromSalesforce
+	 *            accounts from Salesforce
+	 * @param accountsFromSiebel
+	 *            accounts from Oracle Siebel Business Objects
 	 * @return a list with the merged content of the to input lists
 	 */
-	private static List<Map<String, String>> mergeList(List<Map<String, String>> accountsFromOrgA, List<Map<String, String>> accountsFromOrgB) {
+	private static List<Map<String, String>> mergeList(List<Map<String, String>> accountsFromSalesforce, List<Map<String, String>> accountsFromSiebel) {
 		List<Map<String, String>> mergedAccountList = new ArrayList<Map<String, String>>();
 
-		// Put all accounts from A in the merged contactList
-		for (Map<String, String> accountFromA : accountsFromOrgA) {
-			Map<String, String> mergedAccount = createMergedAccount(accountFromA);
-			mergedAccount.put(VariableNames.ID_IN_SALESFORCE, accountFromA.get(VariableNames.ID));
-			mergedAccount.put(VariableNames.INDUSTRY_IN_SALESFORCE, accountFromA.get(VariableNames.INDUSTRY));
-			mergedAccount.put(VariableNames.NUMBER_OF_EMPLOYEES_IN_SALESFORCE, accountFromA.get(VariableNames.NUMBER_OF_EMPLOYEES));
+		// Put all accounts from Salesforce in the merged contactList
+		for (Map<String, String> accountFromSalesforce : accountsFromSalesforce) {
+			Map<String, String> mergedAccount = createMergedAccount(accountFromSalesforce);
+			mergedAccount.put(VariableNames.ID_IN_SALESFORCE, accountFromSalesforce.get(VariableNames.ID));
+			mergedAccount.put(VariableNames.INDUSTRY_IN_SALESFORCE, accountFromSalesforce.get(VariableNames.INDUSTRY));
+			mergedAccount.put(VariableNames.NUMBER_OF_EMPLOYEES_IN_SALESFORCE, accountFromSalesforce.get(VariableNames.NUMBER_OF_EMPLOYEES));
 			mergedAccountList.add(mergedAccount);
 		}
 
-		// Add the new accounts from B and update the exiting ones
-		for (Map<String, String> accountFromB : accountsFromOrgB) {
-			Map<String, String> accountFromA = findAccountInList(accountFromB.get(VariableNames.IDENTITY_FIELD_KEY), mergedAccountList);
-			if (accountFromA != null) {
-				accountFromA.put(VariableNames.ID_IN_SIEBEL, accountFromB.get(VariableNames.ID));
-				accountFromA.put(VariableNames.INDUSTRY_IN_SIEBEL, accountFromB.get(VariableNames.INDUSTRY));
-				accountFromA.put(VariableNames.NUMBER_OF_EMPLOYEES_IN_SIEBEL, accountFromB.get(VariableNames.NUMBER_OF_EMPLOYEES));
+		// Add the new accounts from Siebel and update the exiting ones
+		for (Map<String, String> accountFromSiebel : accountsFromSiebel) {
+			Map<String, String> accountFromSalesforce = findAccountInList(accountFromSiebel.get(VariableNames.IDENTITY_FIELD_KEY), mergedAccountList);
+			if (accountFromSalesforce != null) {
+				accountFromSalesforce.put(VariableNames.ID_IN_SIEBEL, accountFromSiebel.get(VariableNames.ID));
+				accountFromSalesforce.put(VariableNames.INDUSTRY_IN_SIEBEL, accountFromSiebel.get(VariableNames.INDUSTRY));
+				accountFromSalesforce.put(VariableNames.NUMBER_OF_EMPLOYEES_IN_SIEBEL, accountFromSiebel.get(VariableNames.NUMBER_OF_EMPLOYEES));
 			} else {
-				Map<String, String> mergedAccount = createMergedAccount(accountFromB);
-				mergedAccount.put(VariableNames.ID_IN_SIEBEL, accountFromB.get(VariableNames.ID));
-				mergedAccount.put(VariableNames.INDUSTRY_IN_SIEBEL, accountFromB.get(VariableNames.INDUSTRY));
-				mergedAccount.put(VariableNames.NUMBER_OF_EMPLOYEES_IN_SIEBEL, accountFromB.get(VariableNames.NUMBER_OF_EMPLOYEES));
+				Map<String, String> mergedAccount = createMergedAccount(accountFromSiebel);
+				mergedAccount.put(VariableNames.ID_IN_SIEBEL, accountFromSiebel.get(VariableNames.ID));
+				mergedAccount.put(VariableNames.INDUSTRY_IN_SIEBEL, accountFromSiebel.get(VariableNames.INDUSTRY));
+				mergedAccount.put(VariableNames.NUMBER_OF_EMPLOYEES_IN_SIEBEL, accountFromSiebel.get(VariableNames.NUMBER_OF_EMPLOYEES));
 				mergedAccountList.add(mergedAccount);
 			}
 

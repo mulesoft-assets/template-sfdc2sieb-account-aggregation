@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Graph author="damiansima" created="Tue Jan 28 13:31:53 GMT-03:00 2014" description="Map To CSV" guiVersion="3.4.3.P" id="1390931068370" licenseCode="Unlicensed" licenseType="Unknown" modified="Tue Jan 28 13:31:53 GMT-03:00 2014" modifiedBy="damiansima" name="Map_To_CSV" revision="1.0" showComponentDetails="false">
+<?xml version="1.0" encoding="UTF-8"?><Graph __version="3.5.0" author="damiansima" created="Tue Jan 28 13:31:53 GMT-03:00 2014" description="Map To CSV" guiVersion="3.4.3.P" id="1390931068370" licenseCode="Unlicensed" licenseType="Unknown" modified="Tue Jan 28 13:31:53 GMT-03:00 2014" modifiedBy="damiansima" name="Map_To_CSV" revision="1.0" showComponentDetails="false">
 <Global>
 <Metadata __index="0" __referenceCounter="1" __sourcePath="{}/AccountsFromSFDC" _dataStructure="SINGLE_DIMENSIONAL_COLLECTION" _id="__id" _type="Input" id="c1831bf2-4228-4019-9581-efdca322e6ee">
 <Record fieldDelimiter="," name="AccountsFromSFDC" recordDelimiter="\n\\|\r\n\\|\r" type="delimited">
@@ -31,7 +30,7 @@
 </Dictionary>
 </Global>
 <Phase number="0">
-<Node enabled="enabled" fileURL="dict:inputPayload" guInSalesforceme="Map&lt;k,v&gt; READER" guiX="20" guiY="20" id="BEAN_READER0" type="BEAN_READER">
+<Node enabled="enabled" fileURL="dict:inputPayload" guiName="BEAN_READER0" guiX="20" guiY="20" id="BEAN_READER0" type="BEAN_READER">
 <attr name="mapping"><![CDATA[<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Context outPort="0" sequenceField="__id" xpath=".">
   <Mapping cloverField="IDInSalesforce" trim="true" xpath="IDInSalesforce"/>
@@ -44,11 +43,14 @@
 </Context>
 ]]></attr>
 <attr name="_data_format"><![CDATA[MAP]]></attr>
+<attr name="guInSalesforceme"><![CDATA[Map<k,v> READER]]></attr>
 </Node>
-<Node charset="UTF-8" enabled="enabled" excludeFields="__id" fileURL="dict:outputPayload" guInSalesforceme="CSV WRITER" guiX="900" guiY="20" id="DATA_WRITER0" outputFieldNames="true" quotedStrings="true" type="DATA_WRITER">
+<Node charset="UTF-8" enabled="enabled" excludeFields="__id" fileURL="dict:outputPayload" guiName="DATA_WRITER0" guiX="900" guiY="20" id="DATA_WRITER0" outputFieldNames="true" quotedStrings="true" type="DATA_WRITER">
 <attr name="_data_format"><![CDATA[CSV]]></attr>
+<attr name="guInSalesforceme"><![CDATA[CSV WRITER]]></attr>
 </Node>
-<Node enabled="enabled" guInSalesforceme="Foreach 'AccountsFromSFDC' -&gt; 'CSVOutput'" guiX="460" guiY="20" id="FOREACH_ACCOUNTS_FROM_SFDC_CSVOUTPUT" transformClass="com.mulesoft.datamapper.transform.MelRecordTransform" type="REFORMAT">
+<Node enabled="enabled" guiName="FOREACH_ACCOUNTS_FROM_SFDC_CSVOUTPUT" guiX="460" guiY="20" id="FOREACH_ACCOUNTS_FROM_SFDC_CSVOUTPUT" transformClass="com.mulesoft.datamapper.transform.MelRecordTransform" type="REFORMAT">
+<attr name="guInSalesforceme"><![CDATA[Foreach 'AccountsFromSFDC' -> 'CSVOutput']]></attr>
 <attr name="melScript"><![CDATA[//MEL
 //START -> DO NOT REMOVE
 output.__id = (isnull(input.__id) ? null : str2long(input.__id));

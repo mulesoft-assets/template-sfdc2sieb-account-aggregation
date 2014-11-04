@@ -47,7 +47,7 @@ public final class AccountMergerTransformer extends AbstractMessageTransformer {
 	 *            accounts from Oracle Siebel Business Objects
 	 * @return a list with the merged content of the to input lists
 	 */
-	private static List<Map<String, String>> mergeList(List<Map<String, String>> accountsFromSalesforce, List<Map<String, String>> accountsFromSiebel) {
+	public static List<Map<String, String>> mergeList(List<Map<String, String>> accountsFromSalesforce, List<Map<String, String>> accountsFromSiebel) {
 		List<Map<String, String>> mergedAccountList = new ArrayList<Map<String, String>>();
 
 		// Put all accounts from Salesforce in the merged contactList

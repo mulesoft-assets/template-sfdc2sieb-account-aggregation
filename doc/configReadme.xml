@@ -18,6 +18,11 @@ As implemented, it gets two accounts, one from Salesforce and other from Oracle 
 To make this Anypoint Template run, there are certain preconditions that must be considered. All of them deal with the preparations in both, that must be made in order for all to run smoothly. **Failling to do so could lead to unexpected behavior of the template.**
 ]]>
 		</section>
+		<section id="sieb_dst">
+		<![CDATA[
+In order to make the siebel connector work smoothly you have to provide the correct version of the siebel jars (Siebel.jar, SiebelJI_enu.jar) that works with your Siebel installation.
+]]>
+		</section>
 		<section id="running_on_cloudhub">
 <![CDATA[
 Once your app is all set and started, supposing you choose as domain name `template-sfdc2sieb-account-aggregation` to trigger the use case you just need to hit `http://template-sfdc2sieb-account-aggregation.cloudhub.io/synccontacts` and report will be sent to the emails configured.

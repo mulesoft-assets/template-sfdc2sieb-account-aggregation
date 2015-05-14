@@ -11,7 +11,7 @@ For practical purposes this Template will generate the result in the format of a
 
 This Template should serve as a foundation for extracting data from two systems, aggregating data, comparing values of fields for the objects, and generating a report on the differences. 
 
-As implemented, it gets two accounts, one from Salesforce and other from Oracle Siebel Business Objects instance. Then it compares by the name of the accounts, and generates a CSV file which shows accounts in Salesforce, accounts in Oracle Siebel Business Objects, and accounts in Salesforce and Oracle Siebel Business Objects. The report is then e-mailed to a configured group of e-mail addresses.
+As implemented, it gets two accounts, one from Salesforce and other from Oracle Siebel Business Objects instance. Then it compares by the name of the accounts, and generates a CSV file which shows accounts in Salesforce, accounts in Oracle Siebel Business Objects, and accounts in both Salesforce and Oracle Siebel Business Objects. The report is then e-mailed to a configured group of e-mail addresses.
 		</section>
 		<section id="considerations">
 <![CDATA[
@@ -25,7 +25,7 @@ In order to make the siebel connector work smoothly you have to provide the corr
 		</section>
 		<section id="running_on_cloudhub">
 <![CDATA[
-Once your app is all set and started, supposing you choose as domain name `template-sfdc2sieb-account-aggregation` to trigger the use case you just need to hit `http://template-sfdc2sieb-account-aggregation.cloudhub.io/synccontacts` and report will be sent to the emails configured.
+Once your app is all set up and started, supposing you choose as domain name `template-sfdc2sieb-account-aggregation` to trigger the use case you just need to hit `http://template-sfdc2sieb-account-aggregation.cloudhub.io/synccontacts` and report will be sent to the emails configured.
 ]]>
 		</section>
 		<section id="running_on_standalone">
@@ -35,13 +35,15 @@ After this, to trigger the use case you just need to hit the local HTTP endpoint
 		</section>
 		<section id="application_configuration">
 		<![CDATA[
+		
+#### HTTP Connector configuration (common.properties)	
 + http.port `9090` 
 
 #### SalesForce Connector configuration
 + sfdc.username `bob.dylan@org`
 + sfdc.password `DylanPassword123`
 + sfdc.securityToken `avsfwCUl7apQs56Xq2AKi3X`
-+ sfdc.url `https://login.salesforce.com/services/Soap/u/26.0`
++ sfdc.url `https://login.salesforce.com/services/Soap/u/32.0`
 
 #### Oracle Siebel Business Objects Connector configuration
 + sieb.user `SADMIN`
@@ -51,7 +53,7 @@ After this, to trigger the use case you just need to hit the local HTTP endpoint
 + sieb.objectManager `EAIObjMgr_enu`
 + sieb.port `2321`
 
-#### SMPT Services configuration
+#### SMTP Services configuration
 + smtp.host `smtp.gmail.com`
 + smtp.port `587`
 + smtp.user `exampleuser@gmail.com`
@@ -67,38 +69,30 @@ After this, to trigger the use case you just need to hit the local HTTP endpoint
 		</section>
 		<section id="api_calls">
 		<![CDATA[
-Salesforce imposes limits on the number of API Calls that can be made. Therefore calculating this amount may be an important factor to consider. The Anypoint Template calls to the API can be calculated using the formula:
-
-***1 + X + X / 200***
-
-Being ***X*** the number of Accounts to be synchronized on each run. 
-
-The division by ***200*** is because, by default, Accounts are gathered in groups of 200 for each Upsert API Call in the commit step. Also consider that this calls are executed repeatedly every polling cycle.	
-
-For instance if 10 records are fetched from origin instance, then 12 api calls will be made (1 + 10 + 1).
-]]>
+Salesforce imposes limits on the number of API Calls that can be made.  
+This Anypoint Template calls both systems just once so this is not something to worry about.]]> 
 		</section>
 		<section id="default_endpoints_xml">
 		<![CDATA[
-This is the file where you will found the inbound and outbound sides of your integration app.
+This is the file where you will find the inbound and outbound sides of your integration app.
 This Template has an HTTP Inbound Endpoint as the way to trigger the use case and an SMTP Transport as the outbound way to send the report.
 
 $H$H# Trigger Flow
-**HTTP Inbound Endpoint** - Start Report Generation
+**HTTP Connector** - Start Report Generation
 + `${http.port}` is set as a property to be defined either on a property file or in CloudHub environment variables.
-+ The path configured by default is `generatereport` and you are free to change for the one you prefer.
++ The path configured by default is `generatereport` and you are free to change it for the one you prefer.
 + The host name for all endpoints in your CloudHub configuration should be defined as `localhost`. CloudHub will then route requests from your application domain URL to the endpoint.
 
 $H$H# Outbound Flow
 **SMTP Outbound Endpoint** - Send Mail
 + Both SMTP Server configuration and the actual mail to be sent are defined in this endpoint.
-+ This flow is going to be invoked from the flow that does all the functional work: *mainFlow*, the same that is invoked from the Inbound Flow upon triggering of the HTTP Endpoint.
++ This flow is going to be invoked from the flow that does all the functional work: *mainFlow*, the same that is invoked from the Inbound Flow upon triggering of the HTTP Connector.
 
 ]]>
 		</section>
 		<section id="default_business_logic_xml">
 		<![CDATA[
-Functional aspect of the Template is implemented on this XML, directed by one flow responsible of conducting the aggregation of data, comparing records and finally formating the output, in this case being a report.
+Functional aspect of the Template is implemented in this XML, directed by one flow responsible of conducting the aggregation of data, comparing records and finally formating the output, in this case a report.
 The *mainFlow* organizes the job in three different steps and finally invokes the *outboundFlow* that will deliver the report to the corresponding outbound endpoint.
 This flow has Exception Strategy that basically consists on invoking the *defaultChoiseExceptionStrategy* defined in *errorHandling.xml* file.
 
@@ -119,7 +113,7 @@ $H$H# Format Output Flow
 2. Accounts only in Siebel
 3. Accounts in both Salesforce and Siebel
 
-All records ordered alphabetically by name within each category.
+All records aer ordered alphabetically by name within each category.
 If you want to change this order then the *compare* method should be modified.
 
 + CSV Report [DataMapper](http://www.mulesoft.org/documentation/display/current/Datamapper+User+Guide+and+Reference) transforming the List of Maps in CSV with headers **Name**, **IDInSalesforce**, **IndustryInSalesforce**, **NumberOfEmployeesInSalesforce**, **IDInSiebel**, **IndustryInSiebel**, **numberOfEmployeesInSiebel**.

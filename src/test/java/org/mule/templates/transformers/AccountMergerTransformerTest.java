@@ -11,8 +11,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import junit.framework.Assert;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -26,6 +27,8 @@ import org.mule.templates.utils.VariableNames;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AccountMergerTransformerTest {
+	
+	private static final Logger log = LogManager.getLogger(AccountMergerTransformerTest.class);
 
 	@Mock
 	private MuleContext muleContext;
@@ -71,7 +74,7 @@ public class AccountMergerTransformerTest {
 		AccountMergerTransformer transformer = new AccountMergerTransformer();
 		List<Map<String, String>> mergedList = Utils.buildList(transformer.transform(message, "UTF-8"));
 
-		System.out.println(mergedList);
+		log.info(mergedList);
 		Assert.assertEquals("The merged list obtained is not as expected", createExpectedList(), mergedList);
 	}
 

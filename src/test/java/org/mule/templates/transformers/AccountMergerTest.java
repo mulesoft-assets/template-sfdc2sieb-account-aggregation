@@ -18,67 +18,35 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleContext;
-import org.mule.api.MuleMessage;
 import org.mule.api.transformer.TransformerException;
-import org.mule.templates.utils.Utils;
 import org.mule.templates.utils.VariableNames;
 
 @RunWith(MockitoJUnitRunner.class)
-public class AccountMergerTransformerTest {
+public class AccountMergerTest {
 	
-	private static final Logger log = LogManager.getLogger(AccountMergerTransformerTest.class);
-
+	private static final Logger log = LogManager.getLogger(AccountMergerTest.class);
+	
 	@Mock
 	private MuleContext muleContext;
 
 	@Test
 	public void testMerge() throws TransformerException {
-		List<Map<String, String>> accountsSalesforce = new ArrayList<Map<String,String>>();
+		List<Map<String, String>> accountsSFDC = createSFDCAccountList();
+		List<Map<String, String>> accountsSiebel = createSiebelAccountList();
 
-		Map<String, String> account0Salesforce = new HashMap<String, String>();
-		account0Salesforce.put(VariableNames.ID, "0");
-		account0Salesforce.put(VariableNames.NAME, "Sony");
-		account0Salesforce.put(VariableNames.INDUSTRY, "Entertaiment");
-		account0Salesforce.put(VariableNames.NUMBER_OF_EMPLOYEES, "28");
-		accountsSalesforce.add(account0Salesforce);
+		AccountMerger merger = new AccountMerger();
+		List<Map<String, String>> mergedList = (List<Map<String, String>>) merger.mergeList(accountsSFDC, accountsSiebel);
 
-		Map<String, String> account1Salesforce = new HashMap<String, String>();
-		account1Salesforce.put(VariableNames.ID, "1");
-		account1Salesforce.put(VariableNames.NAME, "Generica");
-		account1Salesforce.put(VariableNames.INDUSTRY, "Pharmaceutic");
-		account1Salesforce.put(VariableNames.NUMBER_OF_EMPLOYEES, "22");
-		accountsSalesforce.add(account1Salesforce);
-		
-		List<Map<String, String>> accountsSiebel = new ArrayList<Map<String,String>>();
-		
-		Map<String, String> account1Siebel = new HashMap<String, String>();
-		account1Siebel.put(VariableNames.ID, "1");
-		account1Siebel.put(VariableNames.NAME, "Generica");
-		account1Siebel.put(VariableNames.INDUSTRY, "Experimental");
-		account1Siebel.put(VariableNames.NUMBER_OF_EMPLOYEES, "500");
-		accountsSiebel.add(account1Siebel);
-
-		Map<String, String> account2Siebel = new HashMap<String, String>();
-		account2Siebel.put("Id", "2");
-		account2Siebel.put(VariableNames.NAME, "Global Voltage");
-		account2Siebel.put("Industry", "Energetic");
-		account2Siebel.put("NumberOfEmployees", "4160");
-		accountsSiebel.add(account2Siebel);
-
-		MuleMessage message = new DefaultMuleMessage(null, muleContext);
-		message.setInvocationProperty(VariableNames.ACCOUNTS_FROM_SALESFORCE, accountsSalesforce.iterator());
-		message.setInvocationProperty(VariableNames.ACCOUNTS_FROM_SIEBEL, accountsSiebel.iterator());
-
-		AccountMergerTransformer transformer = new AccountMergerTransformer();
-		List<Map<String, String>> mergedList = Utils.buildList(transformer.transform(message, "UTF-8"));
-
+		log.info(accountsSFDC);
+		log.info(accountsSiebel);
 		log.info(mergedList);
+
 		Assert.assertEquals("The merged list obtained is not as expected", createExpectedList(), mergedList);
 	}
 
-	private List<Map<String, String>> createExpectedList() {
+private List<Map<String, String>> createExpectedList() {
+		
 		Map<String, String> record0 = new HashMap<String, String>();
 		record0.put(VariableNames.ID_IN_SALESFORCE, "0");
 		record0.put(VariableNames.ID_IN_SIEBEL, "");
@@ -112,6 +80,46 @@ public class AccountMergerTransformerTest {
 		expectedList.add(record2);
 
 		return expectedList;
+	}
+
+	private List<Map<String, String>> createSFDCAccountList() {
+		List<Map<String, String>> accountList = new ArrayList<Map<String,String>>();
+	
+		Map<String, String> account0Salesforce = new HashMap<String, String>();
+		account0Salesforce.put(VariableNames.ID, "0");
+		account0Salesforce.put(VariableNames.NAME, "Sony");
+		account0Salesforce.put(VariableNames.INDUSTRY, "Entertaiment");
+		account0Salesforce.put(VariableNames.NUMBER_OF_EMPLOYEES, "28");
+		accountList.add(account0Salesforce);
+	
+		Map<String, String> account1Salesforce = new HashMap<String, String>();
+		account1Salesforce.put(VariableNames.ID, "1");
+		account1Salesforce.put(VariableNames.NAME, "Generica");
+		account1Salesforce.put(VariableNames.INDUSTRY, "Pharmaceutic");
+		account1Salesforce.put(VariableNames.NUMBER_OF_EMPLOYEES, "22");
+		accountList.add(account1Salesforce);
+		
+		return accountList;
+	}
+	
+	private List<Map<String, String>> createSiebelAccountList() {
+		List<Map<String, String>> accountList = new ArrayList<Map<String,String>>();
+		
+		Map<String, String> account1Siebel = new HashMap<String, String>();
+		account1Siebel.put(VariableNames.ID, "1");
+		account1Siebel.put(VariableNames.NAME, "Generica");
+		account1Siebel.put(VariableNames.INDUSTRY, "Experimental");
+		account1Siebel.put(VariableNames.NUMBER_OF_EMPLOYEES, "500");
+		accountList.add(account1Siebel);
+	
+		Map<String, String> account2Siebel = new HashMap<String, String>();
+		account2Siebel.put("Id", "2");
+		account2Siebel.put(VariableNames.NAME, "Global Voltage");
+		account2Siebel.put("Industry", "Energetic");
+		account2Siebel.put("NumberOfEmployees", "4160");
+		accountList.add(account2Siebel);
+		
+		return accountList;
 	}
 
 }

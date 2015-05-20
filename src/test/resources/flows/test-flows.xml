@@ -18,12 +18,12 @@ http://www.mulesoft.org/schema/mule/siebel http://www.mulesoft.org/schema/mule/s
 http://www.mulesoft.org/schema/mule/ee/data-mapper http://www.mulesoft.org/schema/mule/ee/data-mapper/current/mule-data-mapper.xsd
 http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd">
     <data-mapper:config name="salesforce_to_siebel" transformationGraphPath="salesforce_to_siebel.grf" doc:name="salesforce_to_siebel"/>
-    <sub-flow name="createAccountsInSalesforceFlow" doc:name="createAccountsInSalesforceFlow">
+    <sub-flow name="createAccountsInSalesforceFlow" >
         <sfdc:create config-ref="Salesforce" type="Account" doc:name="Salesforce">
             <sfdc:objects ref="#[payload]"/>
         </sfdc:create>
     </sub-flow>
-    <flow name="createAccountsInSiebelFlow" doc:name="createAccountsInSiebelFlow">
+    <flow name="createAccountsInSiebelFlow" >
         <collection-splitter doc:name="Collection Splitter"/>
         <processor-chain doc:name="Processor Chain">
             <data-mapper:transform config-ref="salesforce_to_siebel" doc:name="Salesforce to Siebel"/>
@@ -33,12 +33,12 @@ http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/m
         </processor-chain>
         <collection-aggregator failOnTimeout="true" doc:name="Collection Aggregator"/>
     </flow>
-    <sub-flow name="deleteAccountsFromSalesforceFlow" doc:name="deleteAccountsFromSalesforceFlow">
+    <sub-flow name="deleteAccountsFromSalesforceFlow" >
         <sfdc:delete config-ref="Salesforce" doc:name="Salesforce">
             <sfdc:ids ref="#[payload]"/>
         </sfdc:delete>
     </sub-flow>
-    <sub-flow name="deleteAccountsFromSiebelFlow" doc:name="deleteAccountsFromSiebelFlow">
+    <sub-flow name="deleteAccountsFromSiebelFlow" >
         <foreach doc:name="For Each">
             <siebel:delete-business-component config-ref="Oracle_Siebel_Business_Objects" businessComponentId="#[payload]" businessObjectComponentType="Account.Account" doc:name="Oracle Siebel Business Object"/>
         </foreach>

@@ -28,7 +28,7 @@ import org.mule.templates.utils.VariableNames;
 @RunWith(MockitoJUnitRunner.class)
 public class SortAccountListTransformerTest {
 	
-	private static final Logger log = LogManager.getLogger(AccountMergerTransformerTest.class);
+	private static final Logger log = LogManager.getLogger(SortAccountListTransformerTest.class);
 	
 	@Mock
 	private MuleContext muleContext;

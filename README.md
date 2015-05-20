@@ -1,5 +1,5 @@
 
-# Anypoint Template: Salesforce to Siebel Account Aggregation
+# Anypoint Template: Salesforce and Siebel Account Aggregation
 
 + [License Agreement](#licenseagreement)
 + [Use Case](#usecase)
@@ -100,7 +100,7 @@ In order to make the siebel connector work smoothly you have to provide the corr
 
 
 # Run it! <a name="runit"/>
-Simple steps to get Salesforce to Siebel Account Aggregation running.
+Simple steps to get Salesforce and Siebel Account Aggregation running.
 
 
 ## Running on premise <a name="runonopremise"/>

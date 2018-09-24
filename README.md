@@ -42,9 +42,9 @@ To make this Anypoint Template run, there are certain preconditions that must be
 
 ## Salesforce Considerations <a name="salesforceconsiderations"/>
 
-There may be a few things that you need to know regarding Salesforce, in order for this template to work.
+There may be a few things that you need to know regarding Salesforce for this template to work.
 
-In order to have this template working as expected, you should be aware of your own Salesforce field configuration.
+To have this template work as expected, you should be aware of your own Salesforce field configuration.
 
 ### FAQ
 
@@ -62,7 +62,7 @@ In order to have this template working as expected, you should be aware of your 
 
 ### As source of data
 
-If the user configured in the template for the source system does not have at least *read only* permissions for the fields that are fetched, then a *InvalidFieldFault* API fault will show up.
+If the user configured in the template for the source system does not have at least *read only* permissions for the fields that are fetched, then an *InvalidFieldFault* API fault displays.
 
 ```
 java.lang.RuntimeException: [InvalidFieldFault [ApiQueryFault [ApiFault  exceptionCode='INVALID_FIELD'
@@ -70,7 +70,7 @@ exceptionMessage='
 Account.Phone, Account.Rating, Account.RecordTypeId, Account.ShippingCity
 ^
 ERROR at Row:1:Column:486
-No such column 'RecordTypeId' on entity 'Account'. If you are attempting to use a custom field, be sure to append the '__c' after the custom field name. Please reference your WSDL or the describe call for the appropriate names.'
+No such column 'RecordTypeId' on entity 'Account'. If you are attempting to use a custom field, be sure to append the '__c' after the custom field name. Reference your WSDL or the describe call for the appropriate names.'
 ]
 row='1'
 column='486'
@@ -81,11 +81,11 @@ column='486'
 
 ## Siebel Considerations <a name="siebelconsiderations"/>
 
-There may be a few things that you need to know regarding Siebel, in order for this template to work.
+There may be a few things that you need to know regarding Siebel for this template to work.
 
-This Anypoint Template may be using date time/timestamp fields from the Siebel in order to do comparisons and take further actions.
-While the template handles the time zone by sending all such fields in a neutral time zone, it can not find out on its on the time zone in which the Siebel instance is on.
-It will be up to the user of this template to provide such information. To find out more about Siebel time zones please check the following [link](http://docs.oracle.com/cd/B40099_02/books/Fundamentals/Fund_settingoptions3.html)
+This Anypoint Template may be using date time/timestamp fields from the Siebel to do comparisons and take further actions.
+While the template handles the time zone by sending all such fields in a neutral time zone, it cannot discover the time zone in which the Siebel instance is on.
+It is up to the user of this template to provide such information. For more about Siebel time zones, see [link](http://docs.oracle.com/cd/B40099_02/books/Fundamentals/Fund_settingoptions3.html)
 
 
 
@@ -111,17 +111,17 @@ In this section we detail the way you should run your Anypoint Template on your 
 ### Where to Download Mule Studio and Mule ESB
 First thing to know if you are a newcomer to Mule is where to get the tools.
 
-+ You can download Mule Studio from this [Location](http://www.mulesoft.com/platform/mule-studio)
-+ You can download Mule ESB from this [Location](http://www.mulesoft.com/platform/soa/mule-esb-open-source-esb)
++ You can download Anypoint Studio from this [location](https://www.mulesoft.com/lp/dl/studio)
++ You can download Mule runtime from this [location](https://www.mulesoft.com/platform/mule)
 
 
 ### Importing an Anypoint Template into Studio
-Mule Studio offers several ways to import a project into the workspace, for instance: 
+Anypoint Studio offers several ways to import a project into the workspace, for instance: 
 
-+ Anypoint Studio Project from File System
-+ Packaged mule application (.jar)
++ Anypoint Studio Project from a file system
++ Packaged Mule application (.jar)
 
-You can find a detailed description on how to do so in this [Documentation Page](http://www.mulesoft.org/documentation/display/current/Importing+and+Exporting+in+Studio).
+You can find a detailed description on how to do so in this [documentation page](https://docs.mulesoft.com/).
 
 
 ### Running on Studio <a name="runonstudio"/>
@@ -129,9 +129,9 @@ Once you have imported you Anypoint Template into Anypoint Studio you need to fo
 
 + Locate the properties file `mule.dev.properties`, in src/main/resources
 + Complete all the properties required as per the examples in the section [Properties to be configured](#propertiestobeconfigured)
-+ Once that is done, right click on you Anypoint Template project folder 
-+ Hover you mouse over `"Run as"`
-+ Click on  `"Mule Application (configure)"`
++ Once that is done, right click the Anypoint Template project folder 
++ Hover your mouse over `"Run as"`
++ Click `"Mule Application (configure)"`
 + Inside the dialog, select Environment and set the variable `"mule.env"` to the value `"dev"`
 + Click `"Run"`
 
@@ -141,15 +141,15 @@ Complete all properties in one of the property files, for example in [mule.prod.
 After this, to trigger the use case you just need to hit the local HTTP endpoint with the port you configured in your file. If this is, for instance, `9090` then you should hit: `http://localhost:9090/generatereport` and this will create a CSV report and send it to the mails set.
 
 ## Running on CloudHub <a name="runoncloudhub"/>
-While [creating your application on CloudHub](http://www.mulesoft.org/documentation/display/current/Hello+World+on+CloudHub) (Or you can do it later as a next step), you need to go to Deployment > Advanced to set all environment variables detailed in **Properties to be configured** as well as the **mule.env**.
+While [creating your application on CloudHub](https://docs.mulesoft.com/runtime-manager/) (Or you can do it later as a next step), you need to go to Deployment > Advanced to set all environment variables detailed in **Properties to be configured** as well as the **mule.env**.
 Once your app is all set up and started, supposing you choose as domain name `template-sfdc2sieb-account-aggregation` to trigger the use case you just need to hit `http://template-sfdc2sieb-account-aggregation.cloudhub.io/generatereport` and report will be sent to the emails configured.
 
 ### Deploying your Anypoint Template on CloudHub <a name="deployingyouranypointtemplateoncloudhub"/>
-Mule Studio provides you with really easy way to deploy your Template directly to CloudHub, for the specific steps to do so please check this [link](http://www.mulesoft.org/documentation/display/current/Deploying+Mule+Applications#DeployingMuleApplications-DeploytoCloudHub)
+Studio provides an easy way to deploy your template directly to CloudHub, for the specific steps to do so check this [link](https://docs.mulesoft.com/runtime-manager/deployment-strategies)
 
 
 ## Properties to be configured (With examples) <a name="propertiestobeconfigured"/>
-In order to use this Mule Anypoint Template you need to configure properties (Credentials, configurations, etc.) either in properties file or in CloudHub as Environment Variables. Detail list with examples:
+To use this Mule Anypoint Template you need to configure properties (Credentials, configurations, etc.) either in properties file or in CloudHub as Environment Variables. Detail list with examples:
 ### Application configuration
 **HTTP Connector configuration**
 + http.port `9090` 
@@ -187,10 +187,10 @@ This Anypoint Template calls both systems just once so this is not something to 
 
 # Customize It!<a name="customizeit"/>
 This brief guide intends to give a high level idea of how this Anypoint Template is built and how you can change it according to your needs.
-As mule applications are based on XML files, this page will be organized by describing all the XML that conform the Anypoint Template.
-Of course more files will be found such as Test Classes and [Mule Application Files](http://www.mulesoft.org/documentation/display/current/Application+Format), but to keep it simple we will focus on the XMLs.
+As Mule applications are based on XML files, this page is organized by describing all the XML that conform the Anypoint Template.
+Of course more files can be found such as test classes and Mule application files, but to keep it simple, we focus on the XMLs.
 
-Here is a list of the main XML files you'll find in this application:
+Here is a list of the main XML files you can find in this application:
 
 * [config.xml](#configxml)
 * [endpoints.xml](#endpointsxml)
@@ -199,9 +199,9 @@ Here is a list of the main XML files you'll find in this application:
 
 
 ## config.xml<a name="configxml"/>
-Configuration for Connectors and [Configuration Properties](http://www.mulesoft.org/documentation/display/current/Configuring+Properties) are set in this file. **Even you can change the configuration here, all parameters that can be modified here are in properties file, and this is the recommended place to do it so.** Of course if you want to do core changes to the logic you will probably need to modify this file.
+Configuration for Connectors and [Configuration Properties](https://docs.mulesoft.com/mule4-user-guide/v/4.1/configuring-properties) are set in this file. **Even you can change the configuration here, all parameters that can be modified here are in properties file, and this is the recommended place to do it so.** Of course if you want to do core changes to the logic you will probably need to modify this file.
 
-In the visual editor they can be found on the *Global Element* tab.
+In the visual editor, they can be found on the *Global Element* tab.
 
 
 ## businessLogic.xml<a name="businesslogicxml"/>
@@ -236,7 +236,7 @@ This Template has an HTTP Inbound Endpoint as the way to trigger the use case an
 
 ## errorHandling.xml<a name="errorhandlingxml"/>
 This is the right place to handle how your integration will react depending on the different exceptions. 
-This file holds a [Error Handling](http://www.mulesoft.org/documentation/display/current/Error+Handling) that is referenced by the main flow in the business logic.
+This file provides [Error Handling](https://docs.mulesoft.com/mule4-user-guide/v/4.1/error-handling) that is referenced by the main flow in the business logic.
 
 
 

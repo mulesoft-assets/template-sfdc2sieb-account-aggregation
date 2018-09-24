@@ -19,19 +19,21 @@ http://www.mulesoft.org/schema/mule/siebel http://www.mulesoft.org/schema/mule/s
 				<logger level="INFO" doc:name="Log Accounts from Salesforce" message="Accounts from Salesforce: #[output application/json --- payload]"/>
             </route>
             <route>
-                <ee:transform doc:name="Transform Message" doc:id="12ecf2be-5fe2-43de-96cf-dc27df09816a" >
+				<ee:transform doc:name="Prepare query" doc:id="66f24f66-6ece-4fb5-b0fc-005840ff74b6" >
 					<ee:message >
 						<ee:set-payload ><![CDATA[%dw 2.0
 output application/java
 ---
-["Id","Industry","Name","Employees"]]]></ee:set-payload>
+{
+	"fields" : ["Id", "Industry", "Name", "Employees"]
+}]]></ee:set-payload>
 					</ee:message>
 				</ee:transform>
-				<siebel:query-business-components businessObjectComponentType="Account.Account" doc:name="Query Accounts from Siebel" doc:id="4421216d-cb24-4a3b-8172-c04e03e8d65f" config-ref="Siebel_JDB_Siebel"/>
+				<siebel:query-business-components businessObjectComponentType="Account.Account" doc:name="Query all accounts from Siebel" doc:id="c7a0646a-3ccc-4d55-afa0-78b678fa8a40" config-ref="Siebel_JDB_Siebel"/>
 				<logger level="INFO" doc:name="Log Accounts from Siebel" message="Accounts from Siebel: #[output application/json --- payload]"/>
             </route>
         </scatter-gather>
-        <ee:transform doc:name="Aggregate results and transform to CSV" doc:id="54101da3-a22e-4e2d-b4ac-8d3caca105fd">
+		<ee:transform doc:name="Aggregate results and transform to CSV" doc:id="54101da3-a22e-4e2d-b4ac-8d3caca105fd">
             <ee:message>
                 <ee:set-payload><![CDATA[%dw 2.0
 output application/csv separator=","
@@ -78,7 +80,7 @@ sortBySourceExistence(mergedItems) map (account) -> {
 }]]></ee:set-payload>
             </ee:message>
         </ee:transform>
-        <email:send config-ref="Gmail_SMTP" doc:name="Send migration result email" fromAddress="${mail.from}"
+		<email:send config-ref="Gmail_SMTP" doc:name="Send migration result email" fromAddress="${mail.from}"
                     subject="${mail.subject}">
             <email:to-addresses>
                 <email:to-address value="${mail.to}"/>

@@ -19,7 +19,6 @@
                 <extensions>true</extensions>
                 <configuration>
                     <sharedLibraries>
-                        <classifier>mule-application-template</classifier>
                     </sharedLibraries>
                     <classifier>mule-application-template</classifier>
                 </configuration>

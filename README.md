@@ -13,7 +13,7 @@ I want to aggregate accounts from Salesforce and Oracle Siebel Business Objects 
 
 For practical purposes this Template will generate the result in the format of a CSV Report sent by e-mail.
 
-This Template should serve as a foundation for extracting data from two systems, aggregating data, comparing values of fields for the objects, and generating a report on the differences. 
+This template serves as a foundation for extracting data from two systems, aggregating data, comparing values of fields for the objects, and generating a report on the differences. 
 
 As implemented, it gets two accounts, one from Salesforce and other from Oracle Siebel Business Objects instance. Then it compares by the name of the accounts, and generates a CSV file which shows accounts in Salesforce, accounts in Oracle Siebel Business Objects, and accounts in both Salesforce and Oracle Siebel Business Objects. The report is then e-mailed to a configured group of e-mail addresses.
 <!-- Use Case (end) -->
@@ -24,7 +24,7 @@ As implemented, it gets two accounts, one from Salesforce and other from Oracle 
 <!-- Default Considerations (end) -->
 
 <!-- Considerations (start) -->
-To make this Anypoint Template run, there are certain preconditions that must be considered. All of them deal with the preparations in both, that must be made in order for all to run smoothly. **Failing to do so could lead to unexpected behavior of the template.**
+To make this template run, there are certain preconditions that must be considered. All of them deal with the preparations in both, that must be made for the template to run smoothly. **Failing to do so could lead to unexpected behavior of the template.**
 <!-- Considerations (end) -->
 
 
@@ -121,12 +121,12 @@ After you import your template into Anypoint Studio, follow these steps to run i
 
 ### Running on Mule Standalone
 Update the properties in one of the property files, for example in mule.prod.properties, and run your app with a corresponding environment variable. In this example, use `mule.env=prod`. 
-After this, to trigger the use case you just need to hit the local HTTP endpoint with the port you configured in your file. If this is, for instance, `9090` then you should hit: `http://localhost:9090/generatereport` and this will create a CSV report and send it to the mails set.
+After this, to trigger the use case you just need to browse to the local HTTP endpoint with the port you configured in your file. If this is, for instance, `9090` then you should browse to: `http://localhost:9090/generatereport` and this will create a CSV report and send it to the mails set.
 
 ## Running on CloudHub
 When creating your application in CloudHub, go to Runtime Manager > Manage Application > Properties to set the environment variables listed in "Properties to Configure" as well as the mule.env value.
 <!-- Running on Cloudhub (start) -->
-Once your app is all set up and started, supposing you choose as domain name `template-sfdc2sieb-account-aggregation` to trigger the use case you just need to hit `http://template-sfdc2sieb-account-aggregation.cloudhub.io/generatereport` and report will be sent to the emails configured.
+Once your app is all set up and started, supposing you choose as domain name `template-sfdc2sieb-account-aggregation` to trigger the use case you just need to browse to `http://template-sfdc2sieb-account-aggregation.cloudhub.io/generatereport` and report will be sent to the emails configured.
 <!-- Running on Cloudhub (end) -->
 
 ### Deploying a Template in CloudHub
@@ -139,15 +139,15 @@ In Studio, right click your project name in Package Explorer and select Anypoint
 To use this template, configure properties such as credentials, configurations, etc.) in the properties file or in CloudHub from Runtime Manager > Manage Application > Properties. The sections that follow list example values.
 ### Application Configuration
 <!-- Application Configuration (start) -->
-**HTTP Connector configuration**
+**HTTP Connector Configuration**
 + http.port `9090` 
 
-**Salesforce Connector configuration**
+**Salesforce Connector Configuration**
 + sfdc.username `bob.dylan@org`
 + sfdc.password `DylanPassword123`
 + sfdc.securityToken `avsfwCUl7apQs56Xq2AKi3X`
 
-**Oracle Siebel Connector configuration**
+**Oracle Siebel Connector Configuration**
 + sieb.user `SADMIN`
 + sieb.password `SADMIN`
 + sieb.server `192.168.10.8`
@@ -155,7 +155,7 @@ To use this template, configure properties such as credentials, configurations, 
 + sieb.objectManager `EAIObjMgr_enu`
 + sieb.port `2321`
 
-**SMTP Services configuration**
+**SMTP Services Configuration**
 + smtp.host `smtp.gmail.com`
 + smtp.port `587`
 + smtp.user `exampleuser@gmail.com`
@@ -172,7 +172,7 @@ To use this template, configure properties such as credentials, configurations, 
 # API Calls
 <!-- API Calls (start) -->
 Salesforce imposes limits on the number of API Calls that can be made.  
-This Anypoint Template calls both systems just once so this is not something to worry about.
+This template calls both systems just once so this is not something to worry about.
 <!-- API Calls (end) -->
 
 # Customize It!

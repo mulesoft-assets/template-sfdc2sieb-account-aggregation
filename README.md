@@ -11,7 +11,7 @@ This application is triggered by an HTTP call that can be used manually or progr
 
 Aggregation templates can be easily extended to return a multitude of data in mobile friendly form to power your mobile initiatives by providing easily consumable data structures from otherwise complex backend systems.
 
-// ![](https://www.youtube.com/embed/jnEOalevv-8?wmode=transparent)
+![](https://www.youtube.com/embed/jnEOalevv-8?wmode=transparent)
 [![YouTube Video](http://img.youtube.com/vi/jnEOalevv-8/0.jpg)](https://www.youtube.com/watch?v=jnEOalevv-8)
 
 <!-- Header (end) -->

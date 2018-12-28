@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:siebel="http://www.mulesoft.org/schema/mule/siebel" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+    xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+    xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/siebel http://www.mulesoft.org/schema/mule/siebel/current/mule-siebel.xsd">
+    <munit:config name="test-suite.xml" doc:name="MUnit configuration" />
+
+    <configuration-properties doc:name="Configuration properties" doc:id="c382dc50-b83c-41be-ad31-42ccb929d758" file="mule.test.properties" />
+    <configuration-properties doc:name="Configuration properties" doc:id="a0f29785-69a4-48b7-8ef5-410c95ee7ff2" file="common.properties" />
+
+    <munit:before-test name="test-suiteBefore_Test" description="Before tests actions" doc:id="7f8facb1-95ae-4456-9448-faf3a3a89dc9">
+        <ee:transform doc:name="Prepare test data" doc:id="0ccff51b-ea98-4ad7-9a42-6ab60c588066">
+            <ee:message>
+            </ee:message>
+            <ee:variables>
+                <ee:set-variable variableName="testNameSfdc"><![CDATA[%dw 2.0
+output application/java
+---
+"Test account Salesforce" ++ randomInt(1000)]]></ee:set-variable>
+                <ee:set-variable variableName="testNameSieb"><![CDATA[%dw 2.0
+output application/java
+---
+"Test account Siebel" ++ randomInt(1000)]]></ee:set-variable>
+                <ee:set-variable variableName="testNameSfdcSieb"><![CDATA[%dw 2.0
+output application/java
+---
+"Test account Salesforce-Siebel" ++ randomInt(1000)]]></ee:set-variable>
+            </ee:variables>
+        </ee:transform>
+        <ee:transform doc:name="Prepare data for Salesforce" doc:id="7893012d-0702-4808-b774-7e5b8633f8f5">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+[
+	{
+		"Name": vars.testNameSfdc, 
+		"NumberOfEmployees": 1000
+	},
+	{
+		"Name": vars.testNameSfdcSieb, 
+		"NumberOfEmployees": 2000
+	}
+]]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+        <salesforce:create doc:name="Create Account in Salesforce" doc:id="20146c7f-f668-4f9e-b50a-42bccf3721f1" config-ref="Salesforce_Config"
+            type="Account">
+        </salesforce:create>
+        <ee:transform doc:name="Store IDs to variable sfdcIds" doc:id="5a9d5b23-27e3-4248-91b3-851fe741db44">
+            <ee:message>
+            </ee:message>
+            <ee:variables>
+                <ee:set-variable variableName="sfdcIds"><![CDATA[%dw 2.0
+output application/java
+---
+payload map ($.id)]]></ee:set-variable>
+            </ee:variables>
+        </ee:transform>
+        <set-variable value="#[[]]" doc:name="Create variable siebIds" doc:id="84720513-65a9-4cf5-aa26-6a52e50f7a9e" variableName="siebIds" />
+        <ee:transform doc:name="Prepare data for Siebel" doc:id="4e5f376b-b479-46e2-80ce-f8e01ddd8c10">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+[
+	{
+		"Name": vars.testNameSieb, 
+		"Employees": "3000"
+	},
+	{
+		"Name": vars.testNameSfdcSieb, 
+		"Employees": "4000"
+	}
+]]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+        <foreach doc:name="For Each" doc:id="9658023a-bad5-4e71-8f93-67273badb1ad" collection="payload">
+            <siebel:upsert-business-component businessObjectComponentType="Account.Account" doc:name="Create Accounts in Siebel"
+                doc:id="ce212e81-ff91-499b-8dff-c490f3bd98bd" config-ref="Siebel_JDB_Siebel">
+            </siebel:upsert-business-component>
+            <ee:transform doc:name="Store IDs to variable siebIds" doc:id="d464a8c4-6c15-40b3-ba9e-64657eaf67cb">
+                <ee:message />
+                <ee:variables>
+                    <ee:set-variable variableName="siebIds"><![CDATA[%dw 2.0
+output application/java
+---
+vars.siebIds + payload.createdObjectId]]></ee:set-variable>
+                </ee:variables>
+            </ee:transform>
+        </foreach>
+        <munit-tools:mock-when doc:name="Mock email processor to avoid sending email" doc:id="17ab3357-3f08-4456-9f14-c41c281e06f1"
+            processor="email:send">
+            <munit-tools:then-return />
+        </munit-tools:mock-when>
+    </munit:before-test>
+    <munit:test name="test-suite-businessLogicFlowTest" description="Test" doc:id="4ffcda90-21bf-4cd4-9460-09cf6ca578e5">
+        <munit:execution>
+            <flow-ref doc:name="Call businessLogicFlow" doc:id="3e0601a1-1b47-4974-83b0-8d30726559dd" name="businessLogicFlow" />
+            <ee:transform doc:name="Filtering test records" doc:id="903370f0-c852-4d41-a25e-46f41bbe649b">
+                <ee:message>
+                    <ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+payload filter ($.Name == vars.testNameSfdc or $.Name == vars.testNameSieb or $.Name == vars.testNameSfdcSieb)]]>
+                    </ee:set-payload>
+                </ee:message>
+            </ee:transform>
+        </munit:execution>
+        <munit:validation>
+            <munit-tools:assert-that doc:name="Assert number of records" doc:id="f202c84b-b80c-42bf-b2bb-17b889c1bc50"
+                expression="#[sizeOf(payload)]" is="#[MunitTools::equalTo(3)]" message="Assert number of records" />
+            <munit-tools:assert-that doc:name="Assert that the first record is correct" doc:id="df64f6a4-1444-43d1-9b31-069dccfb9c04"
+                is="#[MunitTools::equalTo(vars.testNameSfdc)]" expression="#[payload[0].Name]" message="The first record is incorrect" />
+            <munit-tools:assert-that doc:name="Assert that the first record exists in Salesforce" doc:id="f3881a26-b7ed-4473-a4a2-a465aa5f544d"
+                expression="#[payload[0].IDInSalesforce]" is="#[MunitTools::not(MunitTools::isEmptyOrNullString())]" message="The first record doesn't exist in Salesforce" />
+            <munit-tools:assert-that doc:name="Assert that the first record does not exist in Siebel" doc:id="f1900f46-2e69-4f50-b6db-9c240463ba59"
+                expression="#[payload[0].IDInSiebel]" is="#[MunitTools::isEmptyOrNullString()]" message="The first record exists in instance Siebel" />
+            <munit-tools:assert-that doc:name="Assert that the second record is correct" doc:id="df64f6a4-1444-43d1-9b31-069dccfb9c04"
+                is="#[MunitTools::equalTo(vars.testNameSieb)]" expression="#[payload[1].Name]" message="The second record is incorrect" />
+            <munit-tools:assert-that doc:name="Assert that the secord record does not exist in Salesforce" doc:id="de0e4d31-5f43-4ddb-bcc1-bd107f2e4a26"
+                expression="#[payload[1].IDInSalesforce]" is="#[MunitTools::isEmptyOrNullString()]" message="The secord record exists in Salesforce" />
+            <munit-tools:assert-that doc:name="Assert that the secord record exists in Siebel" doc:id="d518abcd-8c6a-4cc7-95ff-73d57797a003"
+                is="#[MunitTools::not(MunitTools::isEmptyOrNullString())]" expression="#[payload[1].IDInSiebel]" message="The secord record doesn't exist in Siebel" />
+            <munit-tools:assert-that doc:name="Assert that the third record is correct" doc:id="df64f6a4-1444-43d1-9b31-069dccfb9c04"
+                is="#[MunitTools::equalTo(vars.testNameSfdcSieb)]" expression="#[payload[2].Name]" message="The third record is incorrect" />
+            <munit-tools:assert-that doc:name="Assert that the third record exists in Salesforce" doc:id="39ff4804-dc22-4263-85af-ec0396a50e81"
+                expression="#[payload[2].IDInSalesforce]" is="#[MunitTools::not(MunitTools::isEmptyOrNullString())]" message="The third record doesn't exist in Salesforce" />
+            <munit-tools:assert-that doc:name="Assert that the third record exists in Siebel" doc:id="163b284b-1a69-4ee5-b71c-da0baf5d73e5"
+                expression="#[payload[2].IDInSiebel]" is="#[MunitTools::not(MunitTools::isEmptyOrNullString())]" message="The third record doesn't exist in Siebel" />
+        </munit:validation>
+    </munit:test>
+
+    <munit:after-test name="test-suiteAfter_Test" description="After tests actions" doc:id="5b85bb9e-67e6-47f7-8f71-53a39f147fc8">
+        <salesforce:delete doc:name="Delete test data from Salesforce" doc:id="64f42f33-df2b-420a-8eac-0c7d92d7814e" config-ref="Salesforce_Config">
+            <salesforce:delete-ids><![CDATA[#[vars.sfdcIds]]]></salesforce:delete-ids>
+        </salesforce:delete>
+        <foreach doc:name="For Each" doc:id="84d91515-11b8-4f76-80b6-5d205819d5d0" collection="vars.siebIds">
+            <siebel:delete-business-component doc:name="Delete test data from Siebel" doc:id="ea7006c3-3ff6-48e4-89dd-8e3e7401bacf"
+                config-ref="Siebel_JDB_Siebel" businessObjectComponentType="Account.Account" businessComponentId="#[payload]" />
+        </foreach>
+    </munit:after-test>
+</mule>
